@@ -17,7 +17,6 @@ session_start();
         
         <div class="button-group">
             <a href="login.php" class="btn btn-login">Login</a>
-            <a href="cadastrar_ambiente.php" class="btn btn-register">Cadastrar Ambiente</a>
         </div>
     </div>
 </body>
