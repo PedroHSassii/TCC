@@ -13,7 +13,12 @@ session_start();
 <body>
     <div class="container">
         <h1>Bem-vindo ao Sistema de Automação e Controle de Temperatura!</h1>
-        <a href="login.php" class="btn-login">Login</a>
+        <p>Controle seu ar-condicionado de forma fácil e eficiente.</p>
+        
+        <div class="button-group">
+            <a href="login.php" class="btn btn-login">Login</a>
+            <a href="cadastrar_ambiente.php" class="btn btn-register">Cadastrar Ambiente</a>
+        </div>
     </div>
 </body>
 </html>
