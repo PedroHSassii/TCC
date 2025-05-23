@@ -1,6 +1,6 @@
 <?php
 session_start();
-include 'db.php'; // Inclui o arquivo de conexão com o banco de dados
+include 'db.php'; // Inclui o arquivo de conexï¿½o com o banco de dados
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $email = $_POST['email'];
@@ -12,22 +12,22 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $stmt->execute();
     $stmt->store_result();
 
-    // Verifica se o usuário existe
+    // Verifica se o usuï¿½rio existe
     if ($stmt->num_rows > 0) {
         $stmt->bind_result($id, $hashed_password);
         $stmt->fetch();
 
         // Verifica a senha
         if (password_verify($senha, $hashed_password)) {
-            // Senha correta, inicia a sessão
+            // Senha correta, inicia a sessï¿½o
             $_SESSION['usuario_id'] = $id;
-            header("Location: controle.php"); // Redireciona para a página de controle
+            header("Location: menu.php"); // Redireciona para a pï¿½gina do Menu
             exit();
         } else {
             echo "Senha incorreta!";
         }
     } else {
-        echo "Usuário não encontrado!";
+        echo "Usuï¿½rio nï¿½o encontrado!";
     }
     $stmt->close();
 }

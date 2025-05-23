@@ -33,4 +33,5 @@ CREATE TABLE historico (
 -- Usuario Admin
 ALTER TABLE usuarios ADD COLUMN is_admin TINYINT(1) DEFAULT 0;
 
-INSERT INTO usuarios (email, senha, is_admin) VALUES ('admin@admin.com', 'admin', 1);
+INSERT INTO usuarios (email, senha, is_admin) VALUES ('admin@admin.com', '$2y$10$8EqDWkX96H3..4mAcOa8QeMIVMqL8UgAbeXTcZI2IkthS.M1t63Zy', 1);
+INSERT INTO usuarios (email, senha, is_admin) VALUES ('user@user.com', '$2y$10$FrbS5VOYIviJKKNSMJWxaup0wTkMVrYyagK8luY7x5C4H4AI3jLvy');

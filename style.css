@@ -68,11 +68,11 @@ th {
 /* Estilos responsivos */
 @media (max-width: 600px) {
     body {
-        padding: 10px;
+        padding: 10px; /* Reduz o padding em telas pequenas */
     }
 
     .container {
-        padding: 15px;
+        padding: 15px; /* Reduz o padding do container */
     }
 
     h1 {
@@ -80,6 +80,15 @@ th {
     }
 
     input, button {
-        padding: 8px;
+        padding: 8px; /* Reduz o padding dos inputs e botões */
+        font-size: 14px; /* Tamanho da fonte menor em telas pequenas */
+    }
+
+    table {
+        font-size: 14px; /* Tamanho da fonte da tabela menor em telas pequenas */
+    }
+
+    th, td {
+        padding: 8px; /* Reduz o padding das células da tabela */
     }
 }
