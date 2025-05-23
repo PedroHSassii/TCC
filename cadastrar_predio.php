@@ -22,9 +22,14 @@ if (!$is_admin) {
     exit();
 }
 
+// Obter a lista de usuários administradores
+$stmt = $conn->prepare("SELECT id, nome FROM usuarios WHERE is_admin = 1");
+$stmt->execute();
+$result = $stmt->get_result();
+
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $nome_predio = $_POST['nome_predio'];
-    $responsavel_id = $_SESSION['usuario_id']; // O responsável é o usuário logado
+    $responsavel_id = $_POST['responsavel_id']; // ID do responsável
 
     // Prepara a consulta para inserir o novo prédio
     $stmt = $conn->prepare("INSERT INTO predios (nome, responsavel_id) VALUES (?, ?)");
@@ -53,6 +58,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             <div class="form-group">
                 <label for="nome_predio">Nome do Prédio:</label>
                 <input type="text" name="nome_predio" class="form-control" required>
+            </div>
+            <div class="form-group">
+                <label for="responsavel_id">Responsável:</label>
+                <select name="responsavel_id" class="form-control" required>
+                    <option value="">Selecione um responsável</option>
+                    <?php while ($row = $result->fetch_assoc()): ?>
+                        <option value="<?php echo $row['id']; ?>"><?php echo htmlspecialchars($row['nome']); ?></option>
+                    <?php endwhile; ?>
+                </select>
             </div>
             <button type="submit" class="btn btn-primary btn-block">Cadastrar</button>
         </form>

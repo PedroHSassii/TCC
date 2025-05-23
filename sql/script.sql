@@ -50,3 +50,7 @@ CREATE TABLE predios (
     FOREIGN KEY (responsavel_id) REFERENCES usuarios(id) ON DELETE SET NULL
 );
 
+-- Adiciona nome ao usuario
+ALTER TABLE usuarios 
+ADD COLUMN nome VARCHAR(255) NOT NULL;
+

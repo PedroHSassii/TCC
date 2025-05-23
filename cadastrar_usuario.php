@@ -2,25 +2,36 @@
 session_start();
 include 'db.php'; // Conexão com o banco de dados
 
-// Verifica se o usuário está logado e é administrador
+// Verifica se o usuário está logado e é admin
 if (!isset($_SESSION['usuario_id'])) {
     header("Location: login.php");
     exit();
 }
 
-// Verifica se o formulário foi enviado
+// Verifica se o usuário é admin
+$usuario_id = $_SESSION['usuario_id'];
+$stmt = $conn->prepare("SELECT is_admin FROM usuarios WHERE id = ?");
+$stmt->bind_param("i", $usuario_id);
+$stmt->execute();
+$stmt->bind_result($is_admin);
+$stmt->fetch();
+$stmt->close();
+
+if (!$is_admin) {
+    echo "Acesso negado. Apenas administradores podem cadastrar usuários.";
+    exit();
+}
+
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    $nome = $_POST['nome'];
     $email = $_POST['email'];
     $senha = $_POST['senha'];
-    $is_admin = isset($_POST['is_admin']) ? 1 : 0; // Verifica se o usuário é admin
+    $hashed_password = password_hash($senha, PASSWORD_DEFAULT); // Hash da senha
 
-    // Hash da senha
-    $hashed_password = password_hash($senha, PASSWORD_DEFAULT);
-
-    // Prepara a consulta para evitar SQL Injection
-    $stmt = $conn->prepare("INSERT INTO usuarios (email, senha, is_admin) VALUES (?, ?, ?)");
-    $stmt->bind_param("ssi", $email, $hashed_password, $is_admin);
-
+    // Prepara a consulta para inserir o novo usuário
+    $stmt = $conn->prepare("INSERT INTO usuarios (nome, email, senha, is_admin) VALUES (?, ?, ?, 0)");
+    $stmt->bind_param("sss", $nome, $email, $hashed_password);
+    
     if ($stmt->execute()) {
         echo "Usuário cadastrado com sucesso!";
     } else {
@@ -36,12 +47,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <meta charset="UTF-8">
     <title>Cadastrar Usuário</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <link rel="stylesheet" href="style.css">
 </head>
 <body class="bg-light">
     <div class="container mt-5">
         <h1 class="text-center">Cadastrar Novo Usuário</h1>
         <form action="" method="POST" class="mt-4">
+            <div class="form-group">
+                <label for="nome">Nome:</label>
+                <input type="text" name="nome" class="form-control" required>
+            </div>
             <div class="form-group">
                 <label for="email">Email:</label>
                 <input type="email" name="email" class="form-control" required>
@@ -49,10 +63,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             <div class="form-group">
                 <label for="senha">Senha:</label>
                 <input type="password" name="senha" class="form-control" required>
-            </div>
-            <div class="form-group form-check">
-                <input type="checkbox" name="is_admin" class="form-check-input" id="isAdmin" style="transform: scale(1.5);"> <!-- Aumenta o tamanho do checkbox -->
-                <label class="form-check-label" for="isAdmin">Usuário Administrador</label>
             </div>
             <button type="submit" class="btn btn-primary btn-block">Cadastrar</button>
         </form>
