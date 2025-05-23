@@ -51,7 +51,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 <input type="password" name="senha" class="form-control" required>
             </div>
             <div class="form-group form-check">
-                <input type="checkbox" name="is_admin" class="form-check-input" id="isAdmin">
+                <input type="checkbox" name="is_admin" class="form-check-input" id="isAdmin" style="transform: scale(1.5);"> <!-- Aumenta o tamanho do checkbox -->
                 <label class="form-check-label" for="isAdmin">Usuário Administrador</label>
             </div>
             <button type="submit" class="btn btn-primary btn-block">Cadastrar</button>

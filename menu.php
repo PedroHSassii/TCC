@@ -30,46 +30,16 @@ $stmt->close();
     <div class="container mt-5">
         <h1 class="text-center">Menu de Controle de Ar-Condicionado</h1>
 
-        <!-- Menu de navegação -->
-        <nav class="navbar navbar-expand-lg navbar-light bg-light">
-            <a class="navbar-brand" href="#">Menu</a>
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav">
-                    <li class="nav-item">
-                        <a class="nav-link" href="controle.php">Controlar Ambiente</a>
-                    </li>
-                    <?php if ($is_admin): ?>
-                        <li class="nav-item">
-                            <a class="nav-link" href="cadastrar_usuario.php">Cadastrar Usuário</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="cadastrar_ambiente.php">Cadastrar Ambiente</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="historico.php">Histórico</a>
-                        </li>
-                    <?php endif; ?>
-                    <li class="nav-item">
-                        <a class="nav-link" href="logout.php">Logoff</a>
-                    </li>
-                </ul>
-            </div>
-        </nav>
-
         <!-- Botões de Ação -->
         <div class="text-center mt-4">
-            <h2>Bem-vindo ao sistema de controle de ar-condicionado!</h2>
-            <p>Utilize os botões abaixo para acessar as funcionalidades:</p>
-            <a href="controle.php" class="btn btn-primary btn-lg">Controlar Ar-Condicionado</a>
+            <a href="controle.php" class="btn btn-primary btn-lg btn-block mb-3">Controlar Ambiente</a>
             <?php if ($is_admin): ?>
-                <a href="cadastrar_usuario.php" class="btn btn-success btn-lg">Cadastrar Usuário</a>
-                <a href="cadastrar_ambiente.php" class="btn btn-info btn-lg">Cadastrar Ambiente</a>
-                <a href="historico.php" class="btn btn-warning btn-lg">Ver Histórico</a>
+                <a href="cadastrar_usuario.php" class="btn btn-secondary btn-lg btn-block mb-3">Cadastrar Usuário</a>
+                <a href="cadastrar_ambiente.php" class="btn btn-secondary btn-lg btn-block mb-3">Cadastrar Ambiente</a>
+                <a href="cadastrar_predio.php" class="btn btn-secondary btn-lg btn-block mb-3">Cadastrar Predio</a>
+                <a href="historico.php" class="btn btn-secondary btn-lg btn-block mb-3">Ver Histórico</a>
             <?php endif; ?>
-            <a href="logout.php" class="btn btn-danger btn-lg">Logoff</a>
+            <a href="logout.php" class="btn btn-danger btn-lg btn-block">Logoff</a>
         </div>
     </div>
 
