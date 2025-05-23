@@ -49,14 +49,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <title>Cadastrar Usuário</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="style.css">
-    <style>
-        /* Estilo para o checkbox */
-        .form-check-input {
-            width: 1.5em; /* Aumenta a largura do checkbox */
-            height: 1.5em; /* Aumenta a altura do checkbox */
-            margin-top: 0.3em; /* Ajusta a margem superior para centralizar verticalmente */
-        }
-    </style>
 </head>
 <body class="bg-light">
     <div class="container mt-5">
@@ -74,8 +66,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 <label for="senha">Senha:</label>
                 <input type="password" name="senha" class="form-control" required>
             </div>
-            <div class="form-group form-check">
-                <input type="checkbox" name="is_admin" class="form-check-input" id="is_admin" style="width: 1.5em; height: 1.5em;">
+            <div class="form-group form-check text-center">
+                <input type="checkbox" name="is_admin" class="form-check-input" id="is_admin">
                 <label class="form-check-label" for="is_admin">Marque se for administrador</label>
             </div>
             <button type="submit" class="btn btn-primary btn-block">Cadastrar</button>

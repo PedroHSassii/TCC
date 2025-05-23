@@ -49,20 +49,10 @@ button:hover {
     background: #4cae4c; /* Efeito hover */
 }
 
-table {
-    width: 100%; 
-    border-collapse: collapse; 
-    margin-top: 20px; 
-}
-
-th, td {
-    padding: 10px; 
-    text-align: left; 
-    border-bottom: 1px solid #ddd; 
-}
-
-th {
-    background-color: #f2f2f2; 
+.form-check-input {
+    width: 1.5em; /* Aumenta a largura do checkbox */
+    height: 1.5em; /* Aumenta a altura do checkbox */
+    margin-top: 0.3em; /* Ajusta a margem superior para centralizar verticalmente */
 }
 
 /* Estilos responsivos */
@@ -83,14 +73,4 @@ th {
         padding: 8px; /* Reduz o padding dos inputs e botões */
         font-size: 14px; /* Tamanho da fonte menor em telas pequenas */
     }
-
-    table {
-        font-size: 14px; /* Tamanho da fonte da tabela menor em telas pequenas */
-    }
-
-    th, td {
-        padding: 8px; /* Reduz o padding das células da tabela */
-    }
 }
-
-
