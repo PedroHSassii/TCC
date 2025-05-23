@@ -37,6 +37,7 @@ $stmt->close();
                 <a href="cadastrar_usuario.php" class="btn btn-secondary btn-lg btn-block mb-3">Cadastrar Usuário</a>
                 <a href="cadastrar_ambiente.php" class="btn btn-secondary btn-lg btn-block mb-3">Cadastrar Ambiente</a>
                 <a href="cadastrar_predio.php" class="btn btn-secondary btn-lg btn-block mb-3">Cadastrar Predio</a>
+                <a href="cadastro_ir_code.php" class="btn btn-secondary btn-lg btn-block mb-3">Mapear Controle Remote</a>
                 <a href="historico.php" class="btn btn-secondary btn-lg btn-block mb-3">Ver Histórico</a>
             <?php endif; ?>
             <a href="logout.php" class="btn btn-danger btn-lg btn-block">Logoff</a>

@@ -2,7 +2,7 @@
 session_start();
 include 'db.php'; // Conexão com o banco de dados
 
-// Verifica se o usuário está logado e é admin
+// Verifica se o usuário está logado
 if (!isset($_SESSION['usuario_id'])) {
     header("Location: login.php");
     exit();
@@ -18,7 +18,7 @@ $stmt->fetch();
 $stmt->close();
 
 if (!$is_admin) {
-    echo "Acesso negado. Apenas administradores podem cadastrar usuários.";
+    echo "Acesso negado. Apenas administradores podem acessar esta página.";
     exit();
 }
 
@@ -51,28 +51,31 @@ $result = $conn->query($sql);
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <title>Histórico de Uso</title>
 </head>
 <body>
-    <div class="container">
-        <h1>Histórico de Uso do Ar-Condicionado</h1>
+    <div class="container mt-5">
+        <h1 class="text-center">Histórico de Uso do Ar-Condicionado</h1>
 
-        <form method="POST" class="filter-form">
-            <label for="usuario">Usuário:</label>
-            <input type="text" id="usuario" name="usuario" value="<?php echo htmlspecialchars($usuario); ?>">
-
-            <label for="data_inicio">Data Início:</label>
-            <input type="date" id="data_inicio" name="data_inicio" value="<?php echo htmlspecialchars($data_inicio); ?>">
-
-            <label for="data_fim">Data Fim:</label>
-            <input type="date" id="data_fim" name="data_fim" value="<?php echo htmlspecialchars($data_fim); ?>">
-
-            <button type="submit">Filtrar</button>
+        <form method="POST" class="form-inline mb-4">
+            <div class="form-group mx-sm-3 mb-2">
+                <label for="usuario" class="sr-only">Usuário</label>
+                <input type="text" class="form-control" id="usuario" name="usuario" placeholder="Usuário" value="<?php echo htmlspecialchars($usuario); ?>">
+            </div>
+            <div class="form-group mx-sm-3 mb-2">
+                <label for="data_inicio" class="sr-only">Data Início</label>
+                <input type="date" class="form-control" id="data_inicio" name="data_inicio" value="<?php echo htmlspecialchars($data_inicio); ?>">
+            </div>
+            <div class="form-group mx-sm-3 mb-2">
+                <label for="data_fim" class="sr-only">Data Fim</label>
+                <input type="date" class="form-control" id="data_fim" name="data_fim" value="<?php echo htmlspecialchars($data_fim); ?>">
+            </div>
+            <button type="submit" class="btn btn-primary mb-2">Filtrar</button>
         </form>
 
-        <table>
-            <thead>
+        <table class="table table-striped table-bordered">
+            <thead class="thead-dark">
                 <tr>
                     <th>Data e Hora</th>
                     <th>Usuário</th>
@@ -92,12 +95,16 @@ $result = $conn->query($sql);
                               </tr>";
                     }
                 } else {
-                    echo "<tr><td colspan='4'>Nenhum registro encontrado.</td></tr>";
+                    echo "<tr><td colspan='4' class='text-center'>Nenhum registro encontrado.</td></tr>";
                 }
                 $conn->close();
                 ?>
             </tbody>
         </table>
     </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>
