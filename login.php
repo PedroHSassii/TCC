@@ -2,7 +2,7 @@
 session_start();
 // Verificar se o usuário está logado
 if (isset($_SESSION['usuario_id'])) {
-    header("Location: controle.php"); // Redireciona para a página de controle se já estiver logado
+    header("Location: menu.php"); // Redireciona para a página de menu se já estiver logado
     exit();
 }
 ?>
