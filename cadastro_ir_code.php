@@ -22,9 +22,16 @@ if (!$is_admin) {
     exit();
 }
 
-// Obter ambientes
+// Obter ambientes com o nome do prédio e número da sala concatenados
 $ambientes = [];
-$result = $conn->query("SELECT id, nome FROM ambientes");
+$stmt = $conn->prepare("
+    SELECT a.id, CONCAT(p.nome, ' - Sala ', a.numero_sala) AS ambiente_nome 
+    FROM ambientes a 
+    JOIN predios p ON a.predio_id = p.id
+");
+$stmt->execute();
+$result = $stmt->get_result();
+
 while ($row = $result->fetch_assoc()) {
     $ambientes[] = $row;
 }
@@ -65,7 +72,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="style.css">
     <title>Cadastro de Código IR</title>
+    <style>
+        /* Estilos adicionais para centralizar e aumentar os botões */
+        button {
+            padding: 15px; /* Aumenta o padding para botões */
+            font-size: 16px; /* Aumenta o tamanho da fonte */
+            width: 100%; /* Faz com que os botões ocupem toda a largura do contêiner */
+        }
+    </style>
 </head>
 <body>
     <div class="container mt-5">
@@ -76,7 +92,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <select class="form-control" id="ambiente" name="ambiente" required>
                     <option value="">Selecione um ambiente</option>
                     <?php foreach ($ambientes as $ambiente): ?>
-                        <option value="<?php echo $ambiente['id']; ?>"><?php echo $ambiente['nome']; ?></option>
+                        <option value="<?php echo $ambiente['id']; ?>"><?php echo htmlspecialchars($ambiente['ambiente_nome']); ?></option>
                     <?php endforeach; ?>
                 </select>
             </div>
@@ -96,8 +112,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <input type="text" class="form-control" id="codigo_ir" name="codigo_ir" value="<?php echo htmlspecialchars($codigo_ir); ?>" readonly>
             </div>
 
-            <button type="submit" name="ler" class="btn btn-primary">Ler</button>
-            <button type="submit" name="salvar" class="btn btn-success">Salvar</button>
+            <div class="text-center" style="margin-bottom: 15px;"> <!-- Centraliza os botões -->
+                <button type="submit" name="ler" class="btn btn-primary">Ler</button>
+            </div>
+
+            <div class="text-center"> <!-- Centraliza os botões -->                
+                <button type="submit" name="salvar" class="btn btn-success">Salvar</button>
+            </div>
         </form>
     </div>
 
