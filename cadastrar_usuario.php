@@ -26,11 +26,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $nome = $_POST['nome'];
     $email = $_POST['email'];
     $senha = $_POST['senha'];
+    $is_admin = isset($_POST['is_admin']) ? 1 : 0; // Verifica se o checkbox está marcado
     $hashed_password = password_hash($senha, PASSWORD_DEFAULT); // Hash da senha
 
     // Prepara a consulta para inserir o novo usuário
-    $stmt = $conn->prepare("INSERT INTO usuarios (nome, email, senha, is_admin) VALUES (?, ?, ?, 0)");
-    $stmt->bind_param("sss", $nome, $email, $hashed_password);
+    $stmt = $conn->prepare("INSERT INTO usuarios (nome, email, senha, is_admin) VALUES (?, ?, ?, ?)");
+    $stmt->bind_param("sssi", $nome, $email, $hashed_password, $is_admin);
     
     if ($stmt->execute()) {
         echo "Usuário cadastrado com sucesso!";
@@ -47,6 +48,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <meta charset="UTF-8">
     <title>Cadastrar Usuário</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        /* Estilo para o checkbox */
+        .form-check-input {
+            width: 1.5em; /* Aumenta a largura do checkbox */
+            height: 1.5em; /* Aumenta a altura do checkbox */
+            margin-top: 0.3em; /* Ajusta a margem superior para centralizar verticalmente */
+        }
+    </style>
 </head>
 <body class="bg-light">
     <div class="container mt-5">
@@ -63,6 +73,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             <div class="form-group">
                 <label for="senha">Senha:</label>
                 <input type="password" name="senha" class="form-control" required>
+            </div>
+            <div class="form-group form-check">
+                <input type="checkbox" name="is_admin" class="form-check-input" id="is_admin" style="width: 1.5em; height: 1.5em;">
+                <label class="form-check-label" for="is_admin">Marque se for administrador</label>
             </div>
             <button type="submit" class="btn btn-primary btn-block">Cadastrar</button>
         </form>
