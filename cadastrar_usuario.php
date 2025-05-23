@@ -31,7 +31,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     // Prepara a consulta para inserir o novo usuário
     $stmt = $conn->prepare("INSERT INTO usuarios (nome, email, senha, is_admin) VALUES (?, ?, ?, ?)");
-    $stmt->bind_param("sssi", $nome, $email, $hashed_password, $is_admin);
+    $stmt->bind_param($nome, $email, $hashed_password, $is_admin);
     
     if ($stmt->execute()) {
         echo "Usuário cadastrado com sucesso!";
@@ -66,9 +66,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 <label for="senha">Senha:</label>
                 <input type="password" name="senha" class="form-control" required>
             <div>
-                <input type="checkbox" id="admin" name="admin">
-                <label for="admin"></label>
-                <label style="display: flex; align-items: center; gap: 5px;">Marque se for administrador</label>
+                <input type="checkbox" id="admin" name="admin" style="transform: scale(1.5)";>
+                <label for="admin" style="display: block; text-align: center;">Marque se for administrador</label>
             </div>
 
             <button type="submit" class="btn btn-primary btn-block">Cadastrar</button>
