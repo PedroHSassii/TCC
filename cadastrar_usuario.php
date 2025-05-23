@@ -65,11 +65,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             <div class="form-group">
                 <label for="senha">Senha:</label>
                 <input type="password" name="senha" class="form-control" required>
+            <div>
+                <input type="checkbox" id="admin" name="admin">
+                <label for="admin"></label>
+                <label style="display: flex; align-items: center; gap: 5px;">Marque se for administrador</label>
             </div>
-            <div class="form-group form-check text-center">
-                <input type="checkbox" name="is_admin" class="form-check-input" id="is_admin">
-                <label class="form-check-label" for="is_admin">Marque se for administrador</label>
-            </div>
+
             <button type="submit" class="btn btn-primary btn-block">Cadastrar</button>
         </form>
         <div class="text-center mt-3">
