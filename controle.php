@@ -61,22 +61,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['sala_id'])) {
 </head>
 <body>
     <div class="container">
-        <form method="POST" class="mt-4">
-            <div class="form-group">
-                <label for="sala_id">Selecione a Sala:</label>
-                <select name="sala_id" id="sala_id" class="form-control" required>
-                    <option value="">Selecione uma sala</option>
-                    <?php foreach ($salas as $sala): ?>
-                        <option value="<?php echo $sala['ambiente_id']; ?>" <?php echo ($sala['ambiente_id'] == $sala_selecionada) ? 'selected' : ''; ?>>
-                            <?php echo htmlspecialchars($sala['ambiente_nome']); ?>
-                        </option>
-                    <?php endforeach; ?>
-                </select>
-            </div>
-            <button type="submit" class="btn btn-primary btn-block">Carregar Funções</button>
-        </form>
-
+        
         <?php if ($sala_selecionada): ?>
+            <h2 class="text-center mt-4"><?php echo htmlspecialchars($salas[array_search($sala_selecionada, array_column($salas, 'ambiente_id'))]['ambiente_nome']); ?></h2>
             <div class="icon-container mt-4">
                 <div class="column">
                     <form action="acao.php" method="POST">
@@ -155,10 +142,24 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['sala_id'])) {
                     </form>
                 </div>
             </div>
+        <?php else: ?>
+            <form method="POST" class="mt-4">
+                <div class="form-group">
+                    <label for="sala_id">Selecione a Sala:</label>
+                    <select name="sala_id" id="sala_id" class="form-control" required>
+                        <option value="">Selecione uma sala</option>
+                        <?php foreach ($salas as $sala): ?>
+                            <option value="<?php echo $sala['ambiente_id']; ?>"><?php echo htmlspecialchars($sala['ambiente_nome']); ?></option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary btn-block">Carregar Funções</button>
+            </form>
         <?php endif; ?>
 
         <div class="text-center mt-4">
             <a href="logout.php" class="btn btn-warning">Logoff</a>
+            <a href="menu.php" class="btn btn-secondary">Voltar</a>
         </div>
     </div>
 
