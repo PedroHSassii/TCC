@@ -22,10 +22,21 @@ while ($row = $result->fetch_assoc()) {
 
 // Inicializa a variável para a sala selecionada
 $sala_selecionada = null;
+$funcoes_mapeadas = []; // Array para armazenar funções mapeadas
 
 // Verifica se o formulário foi enviado
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['sala_id'])) {
     $sala_selecionada = $_POST['sala_id']; // Armazena a sala selecionada
+
+    // Verifica quais funções estão mapeadas para a sala selecionada
+    $stmt = $conn->prepare("SELECT cod_tipofunc FROM ir_codes WHERE cod_ambiente = ?");
+    $stmt->bind_param("i", $sala_selecionada);
+    $stmt->execute();
+    $result_funcoes = $stmt->get_result();
+
+    while ($row = $result_funcoes->fetch_assoc()) {
+        $funcoes_mapeadas[] = $row['cod_tipofunc']; // Armazena os códigos das funções mapeadas
+    }
 }
 ?>
 
@@ -81,29 +92,29 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['sala_id'])) {
             <h2 class="text-center mt-4"><?php echo htmlspecialchars($salas[array_search($sala_selecionada, array_column($salas, 'ambiente_id'))]['ambiente_nome']); ?></h2>
             <div class="icon-container mt-4">
                 <div class="column">
-                    <button class="btn btn-primary btn-icon" onclick="executarAcao('Power')">Power</button>
-                    <button class="btn btn-primary btn-icon" onclick="executarAcao('Fan Speed')">Fan Speed</button>
-                    <button class="btn btn-primary btn-icon" onclick="executarAcao('Quiet')">Quiet</button>
-                    <button class="btn btn-primary btn-icon" onclick="executarAcao('Clean')">Clean</button>
-                    <button class="btn btn-primary btn-icon" onclick="executarAcao('Reset')">Reset</button>
-                    <button class="btn btn-primary btn-icon" onclick="executarAcao('Timer On')">Timer On</button>
+                    <button class="btn btn-primary btn-icon" onclick="executarAcao('Power')" <?php echo in_array(1, $funcoes_mapeadas) ? '' : 'disabled'; ?>>Power</button>
+                    <button class="btn btn-primary btn-icon" onclick="executarAcao('Fan Speed')" <?php echo in_array(2, $funcoes_mapeadas) ? '' : 'disabled'; ?>>Fan Speed</button>
+                    <button class="btn btn-primary btn-icon" onclick="executarAcao('Quiet')" <?php echo in_array(3, $funcoes_mapeadas) ? '' : 'style="display:none;"'; ?>>Quiet</button>
+                    <button class="btn btn-primary btn-icon" onclick="executarAcao('Clean')" <?php echo in_array(4, $funcoes_mapeadas) ? '' : 'style="display:none;"'; ?>>Clean</button>
+                    <button class="btn btn-primary btn-icon" onclick="executarAcao('Reset')" <?php echo in_array(5, $funcoes_mapeadas) ? '' : 'style="display:none;"'; ?>>Reset</button>
+                    <button class="btn btn-primary btn-icon" onclick="executarAcao('Timer On')" <?php echo in_array(6, $funcoes_mapeadas) ? '' : 'style="display:none;"'; ?>>Timer On</button>
                 </div>
 
                 <div class="column">
-                    <button class="btn btn-primary btn-icon" onclick="executarAcao('Temp+')">Temp+</button>
-                    <button class="btn btn-primary btn-icon" onclick="executarAcao('Temp−')">Temp−</button>
-                    <button class="btn btn-primary btn-icon" onclick="executarAcao('Sleep')">Sleep</button>
-                    <button class="btn btn-primary btn-icon" onclick="executarAcao('Eco')">Eco</button>
-                    <button class="btn btn-primary btn-icon" onclick="executarAcao('LED')">LED</button>
+                    <button class="btn btn-primary btn-icon" onclick="executarAcao('Temp+')" <?php echo in_array(7, $funcoes_mapeadas) ? '' : 'disabled'; ?>>Temp+</button>
+                    <button class="btn btn-primary btn-icon" onclick="executarAcao('Temp−')" <?php echo in_array(8, $funcoes_mapeadas) ? '' : 'disabled'; ?>>Temp−</button>
+                    <button class="btn btn-primary btn-icon" onclick="executarAcao('Sleep')" <?php echo in_array(9, $funcoes_mapeadas) ? '' : 'style="display:none;"'; ?>>Sleep</button>
+                    <button class="btn btn-primary btn-icon" onclick="executarAcao('Eco')" <?php echo in_array(10, $funcoes_mapeadas) ? '' : 'style="display:none;"'; ?>>Eco</button>
+                    <button class="btn btn-primary btn-icon" onclick="executarAcao('LED')" <?php echo in_array(11, $funcoes_mapeadas) ? '' : 'style="display:none;"'; ?>>LED</button>
                 </div>
 
                 <div class="column">
-                    <button class="btn btn-primary btn-icon" onclick="executarAcao('Mode')">Mode</button>
-                    <button class="btn btn-primary btn-icon" onclick="executarAcao('Swing')">Swing</button>
-                    <button class="btn btn-primary btn-icon" onclick="executarAcao('Turbo')">Turbo</button>
-                    <button class="btn btn-primary btn-icon" onclick="executarAcao('Anti-Fungus')">Anti-Fungus</button>
-                    <button class="btn btn-primary btn-icon" onclick="executarAcao('Clock')">Clock</button>
-                    <button class="btn btn-primary btn-icon" onclick="executarAcao('Timer Off')">Timer Off</button>
+                    <button class="btn btn-primary btn-icon" onclick="executarAcao('Mode')" <?php echo in_array(12, $funcoes_mapeadas) ? '' : 'disabled'; ?>>Mode</button>
+                    <button class="btn btn-primary btn-icon" onclick="executarAcao('Swing')" <?php echo in_array(13, $funcoes_mapeadas) ? '' : 'disabled'; ?>>Swing</button>
+                    <button class="btn btn-primary btn-icon" onclick="executarAcao('Turbo')" <?php echo in_array(14, $funcoes_mapeadas) ? '' : 'style="display:none;"'; ?>>Turbo</button>
+                    <button class="btn btn-primary btn-icon" onclick="executarAcao('Anti-Fungus')" <?php echo in_array(15, $funcoes_mapeadas) ? '' : 'style="display:none;"'; ?>>Anti-Fungus</button>
+                    <button class="btn btn-primary btn-icon" onclick="executarAcao('Clock')" <?php echo in_array(16, $funcoes_mapeadas) ? '' : 'style="display:none;"'; ?>>Clock</button>
+                    <button class="btn btn-primary btn-icon" onclick="executarAcao('Timer Off')" <?php echo in_array(17, $funcoes_mapeadas) ? '' : 'style="display:none;"'; ?>>Timer Off</button>
                 </div>
             </div>
         <?php endif; ?>
