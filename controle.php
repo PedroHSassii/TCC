@@ -15,6 +15,7 @@ $stmt->execute();
 $result = $stmt->get_result();
 $salas = [];
 
+// Armazena as salas em um array
 while ($row = $result->fetch_assoc()) {
     $salas[] = $row;
 }
@@ -61,23 +62,22 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['sala_id'])) {
 </head>
 <body>
     <div class="container">
-        
-        <form method="POST" class="mt-4">
-            <div class="form-group">
-                <label for="sala_id">Selecione a Sala:</label>
-                <select name="sala_id" id="sala_id" class="form-control" required>
-                    <option value="">Selecione uma sala</option>
-                    <?php foreach ($salas as $sala): ?>
-                        <option value="<?php echo $sala['ambiente_id']; ?>" <?php echo ($sala['ambiente_id'] == $sala_selecionada) ? 'selected' : ''; ?>>
-                            <?php echo htmlspecialchars($sala['ambiente_nome']); ?>
-                        </option>
-                    <?php endforeach; ?>
-                </select>
-            </div>
-            <button type="submit" class="btn btn-primary btn-block">Carregar Funções</button>
-        </form>
-
-        <?php if ($sala_selecionada): ?>
+        <?php if (!$sala_selecionada): ?>
+            <form method="POST" class="mt-4">
+                <div class="form-group">
+                    <label for="sala_id">Selecione a Sala:</label>
+                    <select name="sala_id" id="sala_id" class="form-control" required>
+                        <option value="">Selecione uma sala</option>
+                        <?php foreach ($salas as $sala): ?>
+                            <option value="<?php echo $sala['ambiente_id']; ?>" <?php echo ($sala['ambiente_id'] == $sala_selecionada) ? 'selected' : ''; ?>>
+                                <?php echo htmlspecialchars($sala['ambiente_nome']); ?>
+                            </option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary btn-block">Carregar Funções</button>
+            </form>
+        <?php else: ?>
             <h2 class="text-center mt-4"><?php echo htmlspecialchars($salas[array_search($sala_selecionada, array_column($salas, 'ambiente_id'))]['ambiente_nome']); ?></h2>
             <div class="icon-container mt-4">
                 <div class="column">
