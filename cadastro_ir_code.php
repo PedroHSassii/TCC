@@ -54,10 +54,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $cod_tipofunc = $_POST['funcao'];
         $cod_ambiente = $_POST['ambiente'];
         $codigo_ir = $_POST['codigo_ir'];
+        $modo = $_POST['modo'];
+        $temperatura = $_POST['temperatura'];
+        $velocidade = $_POST['velocidade'];
+        $swing = isset($_POST['swing']) ? 1 : 0; // 1 para true, 0 para false
+        $timer = isset($_POST['timer']) ? 1 : 0; // 1 para true, 0 para false
+        $status = isset($_POST['status']) ? 1 : 0; // 1 para true, 0 para false
+        $checksum = $_POST['checksum'];
 
         // Salvar no banco de dados
-        $stmt = $conn->prepare("INSERT INTO ir_codes (cod_tipofunc, cod_ambiente, codigo_ir) VALUES (?, ?, ?)");
-        $stmt->bind_param("iis", $cod_tipofunc, $cod_ambiente, $codigo_ir);
+        $stmt = $conn->prepare("INSERT INTO ir_codes (cod_tipofunc, cod_ambiente, codigo_ir, modo, temperatura, velocidade, swing, timer, status, checksum) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+        $stmt->bind_param("iisiiiiiis", $cod_tipofunc, $cod_ambiente, $codigo_ir, $modo, $temperatura, $velocidade, $swing, $timer, $status, $checksum);
         $stmt->execute();
         $stmt->close();
 
@@ -110,6 +117,47 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <div class="form-group">
                 <label for="codigo_ir">Código IR</label>
                 <input type="text" class="form-control" id="codigo_ir" name="codigo_ir" value="<?php echo htmlspecialchars($codigo_ir); ?>" readonly>
+            </div>
+
+            <div class="form-group">
+                <label for="modo">Modo de Operação</label>
+                <select class="form-control" id="modo" name="modo" required>
+                    <option value="frio">Frio</option>
+                    <option value="quente">Quente</option>
+                    <option value="automatico">Automático</option>
+                    <option value="ventilacao">Ventilação</option>
+                    <option value="desumidificacao">Desumidificação</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="temperatura">Temperatura (°C)</label>
+                <input type="number" class="form-control" id="temperatura" name="temperatura" min="16" max="30" required>
+            </div>
+
+            <div class="form-group">
+                <label for="velocidade">Velocidade do Ventilador</label>
+                <select class="form-control" id="velocidade" name="velocidade" required>
+                    <option value="automatica">Automática</option>
+                    <option value="baixa">Baixa</option>
+                    <option value="media">Média</option>
+                    <option value="alta">Alta</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="swing">Swing</label>
+                <input type="checkbox" id="swing" name="swing">
+            </div>
+
+            <div class="form-group">
+                <label for="timer">Timer</label>
+                <input type="checkbox" id="timer" name="timer">
+            </div>
+
+            <div class="form-group">
+                <label for="status">Status de Energia</label>
+                <input type="checkbox" id="status" name="status" checked>
             </div>
 
             <div class="text-center" style="margin-bottom: 15px;"> <!-- Centraliza os botões -->
