@@ -62,99 +62,50 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['sala_id'])) {
 <body>
     <div class="container">
         
+        <form method="POST" class="mt-4">
+            <div class="form-group">
+                <label for="sala_id">Selecione a Sala:</label>
+                <select name="sala_id" id="sala_id" class="form-control" required>
+                    <option value="">Selecione uma sala</option>
+                    <?php foreach ($salas as $sala): ?>
+                        <option value="<?php echo $sala['ambiente_id']; ?>" <?php echo ($sala['ambiente_id'] == $sala_selecionada) ? 'selected' : ''; ?>>
+                            <?php echo htmlspecialchars($sala['ambiente_nome']); ?>
+                        </option>
+                    <?php endforeach; ?>
+                </select>
+            </div>
+            <button type="submit" class="btn btn-primary btn-block">Carregar Funções</button>
+        </form>
+
         <?php if ($sala_selecionada): ?>
             <h2 class="text-center mt-4"><?php echo htmlspecialchars($salas[array_search($sala_selecionada, array_column($salas, 'ambiente_id'))]['ambiente_nome']); ?></h2>
             <div class="icon-container mt-4">
                 <div class="column">
-                    <form action="acao.php" method="POST">
-                        <input type="hidden" name="acao" value="Power">
-                        <button type="submit" class="btn btn-primary btn-icon">Power</button>
-                    </form>
-                    <form action="acao.php" method="POST">
-                        <input type="hidden" name="acao" value="Fan Speed">
-                        <button type="submit" class="btn btn-primary btn-icon">Fan Speed</button>
-                    </form>
-                    <form action="acao.php" method="POST">
-                        <input type="hidden" name="acao" value="Quiet">
-                        <button type="submit" class="btn btn-primary btn-icon">Quiet</button>
-                    </form>
-                    <form action="acao.php" method="POST">
-                        <input type="hidden" name="acao" value="Clean">
-                        <button type="submit" class="btn btn-primary btn-icon">Clean</button>
-                    </form>
-                    <form action="acao.php" method="POST">
-                        <input type="hidden" name="acao" value="Reset">
-                        <button type="submit" class="btn btn-primary btn-icon">Reset</button>
-                    </form>
-                    <form action="acao.php" method="POST">
-                        <input type="hidden" name="acao" value="Timer On">
-                        <button type="submit" class="btn btn-primary btn-icon">Timer On</button>
-                    </form>
+                    <button class="btn btn-primary btn-icon" onclick="executarAcao('Power')">Power</button>
+                    <button class="btn btn-primary btn-icon" onclick="executarAcao('Fan Speed')">Fan Speed</button>
+                    <button class="btn btn-primary btn-icon" onclick="executarAcao('Quiet')">Quiet</button>
+                    <button class="btn btn-primary btn-icon" onclick="executarAcao('Clean')">Clean</button>
+                    <button class="btn btn-primary btn-icon" onclick="executarAcao('Reset')">Reset</button>
+                    <button class="btn btn-primary btn-icon" onclick="executarAcao('Timer On')">Timer On</button>
                 </div>
 
                 <div class="column">
-                    <form action="acao.php" method="POST">
-                        <input type="hidden" name="acao" value="Temp+">
-                        <button type="submit" class="btn btn-primary btn-icon">Temp+</button>
-                    </form>
-                    <form action="acao.php" method="POST">
-                        <input type="hidden" name="acao" value="Temp−">
-                        <button type="submit" class="btn btn-primary btn-icon">Temp−</button>
-                    </form>
-                    <form action="acao.php" method="POST">
-                        <input type="hidden" name="acao" value="Sleep">
-                        <button type="submit" class="btn btn-primary btn-icon">Sleep</button>
-                    </form>
-                    <form action="acao.php" method="POST">
-                        <input type="hidden" name="acao" value="Eco">
-                        <button type="submit" class="btn btn-primary btn-icon">Eco</button>
-                    </form>
-                    <form action="acao.php" method="POST">
-                        <input type="hidden" name="acao" value="LED">
-                        <button type="submit" class="btn btn-primary btn-icon">LED</button>
-                    </form>
+                    <button class="btn btn-primary btn-icon" onclick="executarAcao('Temp+')">Temp+</button>
+                    <button class="btn btn-primary btn-icon" onclick="executarAcao('Temp−')">Temp−</button>
+                    <button class="btn btn-primary btn-icon" onclick="executarAcao('Sleep')">Sleep</button>
+                    <button class="btn btn-primary btn-icon" onclick="executarAcao('Eco')">Eco</button>
+                    <button class="btn btn-primary btn-icon" onclick="executarAcao('LED')">LED</button>
                 </div>
 
                 <div class="column">
-                    <form action="acao.php" method="POST">
-                        <input type="hidden" name="acao" value="Mode">
-                        <button type="submit" class="btn btn-primary btn-icon">Mode</button>
-                    </form>
-                    <form action="acao.php" method="POST">
-                        <input type="hidden" name="acao" value="Swing">
-                        <button type="submit" class="btn btn-primary btn-icon">Swing</button>
-                    </form>
-                    <form action="acao.php" method="POST">
-                        <input type="hidden" name="acao" value="Turbo">
-                        <button type="submit" class="btn btn-primary btn-icon">Turbo</button>
-                    </form>
-                    <form action="acao.php" method="POST">
-                        <input type="hidden" name="acao" value="Anti-Fungus">
-                        <button type="submit" class="btn btn-primary btn-icon">Anti-Fungus</button>
-                    </form>
-                    <form action="acao.php" method="POST">
-                        <input type="hidden" name="acao" value="Clock">
-                        <button type="submit" class="btn btn-primary btn-icon">Clock</button>
-                    </form>
-                    <form action="acao.php" method="POST">
-                        <input type="hidden" name="acao" value="Timer Off">
-                        <button type="submit" class="btn btn-primary btn-icon">Timer Off</button>
-                    </form>
+                    <button class="btn btn-primary btn-icon" onclick="executarAcao('Mode')">Mode</button>
+                    <button class="btn btn-primary btn-icon" onclick="executarAcao('Swing')">Swing</button>
+                    <button class="btn btn-primary btn-icon" onclick="executarAcao('Turbo')">Turbo</button>
+                    <button class="btn btn-primary btn-icon" onclick="executarAcao('Anti-Fungus')">Anti-Fungus</button>
+                    <button class="btn btn-primary btn-icon" onclick="executarAcao('Clock')">Clock</button>
+                    <button class="btn btn-primary btn-icon" onclick="executarAcao('Timer Off')">Timer Off</button>
                 </div>
             </div>
-        <?php else: ?>
-            <form method="POST" class="mt-4">
-                <div class="form-group">
-                    <label for="sala_id">Selecione a Sala:</label>
-                    <select name="sala_id" id="sala_id" class="form-control" required>
-                        <option value="">Selecione uma sala</option>
-                        <?php foreach ($salas as $sala): ?>
-                            <option value="<?php echo $sala['ambiente_id']; ?>"><?php echo htmlspecialchars($sala['ambiente_nome']); ?></option>
-                        <?php endforeach; ?>
-                    </select>
-                </div>
-                <button type="submit" class="btn btn-primary btn-block">Carregar Funções</button>
-            </form>
         <?php endif; ?>
 
         <div class="text-center mt-4">
@@ -166,5 +117,24 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['sala_id'])) {
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+        function executarAcao(acao) {
+            // Envia a ação para o servidor via AJAX
+            $.ajax({
+                url: 'acao.php',
+                type: 'POST',
+                data: {
+                    acao: acao,
+                    sala_id: <?php echo json_encode($sala_selecionada); ?> // Passa o ID da sala selecionada
+                },
+                success: function(response) {
+                    alert("Ação executada: " + acao + "\n" + response);
+                },
+                error: function(xhr, status, error) {
+                    alert("Erro ao executar a ação: " + error);
+                }
+            });
+        }
+    </script>
 </body>
 </html>
