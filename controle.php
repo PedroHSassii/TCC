@@ -19,20 +19,12 @@ while ($row = $result->fetch_assoc()) {
     $salas[] = $row;
 }
 
-// Obter funções mapeadas para a sala selecionada
-$funcoes = [];
-if (isset($_POST['sala_id'])) {
-    $sala_id = $_POST['sala_id'];
-    $stmt = $conn->prepare("SELECT f.cod_tipofunc, f.funcao FROM funcoes f 
-                             JOIN ir_codes ic ON f.cod_tipofunc = ic.cod_tipofunc 
-                             WHERE ic.cod_ambiente = ?");
-    $stmt->bind_param("i", $sala_id);
-    $stmt->execute();
-    $result = $stmt->get_result();
+// Inicializa a variável para a sala selecionada
+$sala_selecionada = null;
 
-    while ($row = $result->fetch_assoc()) {
-        $funcoes[$row['cod_tipofunc']] = $row['funcao']; // Mapeia a função
-    }
+// Verifica se o formulário foi enviado
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['sala_id'])) {
+    $sala_selecionada = $_POST['sala_id']; // Armazena a sala selecionada
 }
 ?>
 
@@ -42,13 +34,17 @@ if (isset($_POST['sala_id'])) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <title>Controle de Ar-Condicionado</title>
     <style>
+        body {
+            background-color: #f4f4f4;
+        }
+        .container {
+            margin-top: 50px;
+        }
         .btn-icon {
             width: 100px; /* Largura dos botões */
-            height: 100px; /* Altura dos botões */
+            height: 80px; /* Altura dos botões */
             font-size: 24px; /* Tamanho da fonte */
             margin: 10px; /* Margem entre os botões */
         }
@@ -61,106 +57,101 @@ if (isset($_POST['sala_id'])) {
             flex-direction: column; /* Coloca os botões em coluna */
             align-items: center; /* Centraliza os botões */
         }
-        .disabled {
-            background-color: #ccc; /* Cor de fundo para botões desativados */
-            color: #666; /* Cor do texto para botões desativados */
-            cursor: not-allowed; /* Cursor para indicar que o botão está desativado */
-        }
     </style>
 </head>
-<body class="bg-light">
-    <div class="container mt-5">
-        <h1 class="text-center">Controle de Ar-Condicionado</h1>
-        
+<body>
+    <div class="container">
         <form method="POST" class="mt-4">
             <div class="form-group">
                 <label for="sala_id">Selecione a Sala:</label>
                 <select name="sala_id" id="sala_id" class="form-control" required>
                     <option value="">Selecione uma sala</option>
                     <?php foreach ($salas as $sala): ?>
-                        <option value="<?php echo $sala['ambiente_id']; ?>"><?php echo htmlspecialchars($sala['ambiente_nome']); ?></option>
+                        <option value="<?php echo $sala['ambiente_id']; ?>" <?php echo ($sala['ambiente_id'] == $sala_selecionada) ? 'selected' : ''; ?>>
+                            <?php echo htmlspecialchars($sala['ambiente_nome']); ?>
+                        </option>
                     <?php endforeach; ?>
                 </select>
             </div>
             <button type="submit" class="btn btn-primary btn-block">Carregar Funções</button>
         </form>
 
-        <?php if (!empty($funcoes)): ?>
+        <?php if ($sala_selecionada): ?>
             <div class="icon-container mt-4">
                 <div class="column">
                     <form action="acao.php" method="POST">
                         <input type="hidden" name="acao" value="Power">
-                        <button type="submit" class="btn btn-primary btn-icon <?php echo !isset($funcoes['power']) ? 'disabled' : ''; ?>" <?php echo !isset($funcoes['power']) ? 'disabled' : ''; ?>>Power</button>
+                        <button type="submit" class="btn btn-primary btn-icon">Power</button>
                     </form>
                     <form action="acao.php" method="POST">
                         <input type="hidden" name="acao" value="Fan Speed">
-                        <button type="submit" class="btn btn-primary btn-icon <?php echo !isset($funcoes['fan_speed']) ? 'disabled' : ''; ?>" <?php echo !isset($funcoes['fan_speed']) ? 'disabled' : ''; ?>>Fan Speed</button>
+                        <button type="submit" class="btn btn-primary btn-icon">Fan Speed</button>
                     </form>
                     <form action="acao.php" method="POST">
                         <input type="hidden" name="acao" value="Quiet">
-                        <button type="submit" class="btn btn-primary btn-icon <?php echo !isset($funcoes['quiet']) ? 'disabled' : ''; ?>" <?php echo !isset($funcoes['quiet']) ? 'disabled' : ''; ?>>Quiet</button>
+                        <button type="submit" class="btn btn-primary btn-icon">Quiet</button>
                     </form>
                     <form action="acao.php" method="POST">
                         <input type="hidden" name="acao" value="Clean">
-                        <button type="submit" class="btn btn-primary btn-icon <?php echo !isset($funcoes['clean']) ? 'disabled' : ''; ?>" <?php echo !isset($funcoes['clean']) ? 'disabled' : ''; ?>>Clean</button>
+                        <button type="submit" class="btn btn-primary btn-icon">Clean</button>
                     </form>
                     <form action="acao.php" method="POST">
                         <input type="hidden" name="acao" value="Reset">
-                        <button type="submit" class="btn btn-primary btn-icon <?php echo !isset($funcoes['reset']) ? 'disabled' : ''; ?>" <?php echo !isset($funcoes['reset']) ? 'disabled' : ''; ?>>Reset</button>
+                        <button type="submit" class="btn btn-primary btn-icon">Reset</button>
                     </form>
                     <form action="acao.php" method="POST">
                         <input type="hidden" name="acao" value="Timer On">
-                        <button type="submit" class="btn btn-primary btn-icon <?php echo !isset($funcoes['timer_on']) ? 'disabled' : ''; ?>" <?php echo !isset($funcoes['timer_on']) ? 'disabled' : ''; ?>>Timer On</button>
+                        <button type="submit" class="btn btn-primary btn-icon">Timer On</button>
                     </form>
                 </div>
 
                 <div class="column">
                     <form action="acao.php" method="POST">
                         <input type="hidden" name="acao" value="Temp+">
-                        <button type="submit" class="btn btn-primary btn-icon <?php echo !isset($funcoes['temp_plus']) ? 'disabled' : ''; ?>" <?php echo !isset($funcoes['temp_plus']) ? 'disabled' : ''; ?>>Temp+</button>
+                        <button type="submit" class="btn btn-primary btn-icon">Temp+</button>
                     </form>
                     <form action="acao.php" method="POST">
                         <input type="hidden" name="acao" value="Temp−">
-                        <button type="submit" class="btn btn-primary btn-icon <?php echo !isset($funcoes['temp_minus']) ? 'disabled' : ''; ?>" <?php echo !isset($funcoes['temp_minus']) ? 'disabled' : ''; ?>>Temp−</button>
+                        <button type="submit" class="btn btn-primary btn-icon">Temp−</button>
                     </form>
                     <form action="acao.php" method="POST">
                         <input type="hidden" name="acao" value="Sleep">
-                        <button type="submit" class="btn btn-primary btn-icon <?php echo !isset($funcoes['sleep']) ? 'disabled' : ''; ?>" <?php echo !isset($funcoes['sleep']) ? 'disabled' : ''; ?>>Sleep</button>
+                        <button type="submit" class="btn btn-primary btn-icon">Sleep</button>
                     </form>
                     <form action="acao.php" method="POST">
                         <input type="hidden" name="acao" value="Eco">
-                        <button type="submit" class="btn btn-primary btn-icon <?php echo !isset($funcoes['eco']) ? 'disabled' : ''; ?>" <?php echo !isset($funcoes['eco']) ? 'disabled' : ''; ?>>Eco</button>
+                        <button type="submit" class="btn btn-primary btn-icon">Eco</button>
                     </form>
                     <form action="acao.php" method="POST">
                         <input type="hidden" name="acao" value="LED">
-                        <button type="submit" class="btn btn-primary btn-icon <?php echo !isset($funcoes['led']) ? 'disabled' : ''; ?>" <?php echo !isset($funcoes['led']) ? 'disabled' : ''; ?>>LED</button>
+                        <button type="submit" class="btn btn-primary btn-icon">LED</button>
                     </form>
                 </div>
 
                 <div class="column">
                     <form action="acao.php" method="POST">
                         <input type="hidden" name="acao" value="Mode">
-                        <button type="submit" class="btn btn-primary btn-icon <?php echo !isset($funcoes['mode']) ? 'disabled' : ''; ?>" <?php echo !isset($funcoes['mode']) ? 'disabled' : ''; ?>>Mode</button>
+                        <button type="submit" class="btn btn-primary btn-icon">Mode</button>
                     </form>
                     <form action="acao.php" method="POST">
                         <input type="hidden" name="acao" value="Swing">
-                        <button type="submit" class="btn btn-primary btn-icon <?php echo !isset($funcoes['swing']) ? 'disabled' : ''; ?>" <?php echo !isset($funcoes['swing']) ? 'disabled' : ''; ?>>Swing</button>
+                        <button type="submit" class="btn btn-primary btn-icon">Swing</button>
                     </form>
                     <form action="acao.php" method="POST">
                         <input type="hidden" name="acao" value="Turbo">
-                        <button type="submit" class="btn btn-primary btn-icon <?php echo !isset($funcoes['turbo']) ? 'disabled' : ''; ?>" <?php echo !isset($funcoes['turbo']) ? 'disabled' : ''; ?>>Turbo</button>
+                        <button type="submit" class="btn btn-primary btn-icon">Turbo</button>
                     </form>
                     <form action="acao.php" method="POST">
                         <input type="hidden" name="acao" value="Anti-Fungus">
-                        <button type="submit" class="btn btn-primary btn-icon <?php echo !isset($funcoes['anti_fungus']) ? 'disabled' : ''; ?>" <?php echo !isset($funcoes['anti_fungus']) ? 'disabled' : ''; ?>>Anti-Fungus</button>
+                        <button type="submit" class="btn btn-primary btn-icon">Anti-Fungus</button>
                     </form>
                     <form action="acao.php" method="POST">
                         <input type="hidden" name="acao" value="Clock">
-                        <button type="submit" class="btn btn-primary btn-icon <?php echo !isset($funcoes['clock']) ? 'disabled' : ''; ?>" <?php echo !isset($funcoes['clock']) ? 'disabled' : ''; ?>>Clock</button>
+                        <button type="submit" class="btn btn-primary btn-icon">Clock</button>
                     </form>
                     <form action="acao.php" method="POST">
                         <input type="hidden" name="acao" value="Timer Off">
-                        <button type="submit" class="btn btn-primary btn-icon <?php echo !isset($funcoes['timer_off']) ? 'disabled' : ''; ?>" <?php echo !isset($funcoes['timer_off']) ? 'disabled' : ''; ?>>Timer Off</button>
+                        <button type="submit" class="btn btn-primary btn-icon">Timer Off</button>
                     </form>
                 </div>
             </div>
