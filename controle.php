@@ -39,10 +39,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['sala_id'])) {
     }
 
     // Obter dados do ambiente selecionado
-    $stmt = $conn->prepare("SELECT modo_operacao, temperatura, velocidade_ventilador, timer, status FROM ambientes WHERE id = ?");
+    $stmt = $conn->prepare("SELECT modo, temperatura, velocidade, timer, status FROM ambientes WHERE id = ?");
     $stmt->bind_param("i", $sala_selecionada);
     $stmt->execute();
-    $stmt->bind_result($modo_operacao, $temperatura, $velocidade_ventilador, $timer, $status);
+    $stmt->bind_result($modo, $temperatura, $velocidade, $timer, $status);
     $stmt->fetch();
     $stmt->close();
 }
@@ -106,9 +106,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['sala_id'])) {
         <?php else: ?>
             <div class="monitor">
                 <h4>Monitor de Controle</h4>
-                <p><strong>Modo de Operação:</strong> <?php echo isset($modo_operacao) ? htmlspecialchars($modo_operacao) : 'N/A'; ?></p>
+                <p><strong>Modo de Operação:</strong> <?php echo isset($modo) ? htmlspecialchars($modo) : 'N/A'; ?></p>
                 <p><strong>Temperatura:</strong> <?php echo isset($temperatura) ? htmlspecialchars($temperatura) . ' °C' : 'N/A'; ?></p>
-                <p><strong>Velocidade do Ventilador:</strong> <?php echo isset($velocidade_ventilador) ? htmlspecialchars($velocidade_ventilador) : 'N/A'; ?></p>
+                <p><strong>Velocidade do Ventilador:</strong> <?php echo isset($velocidade) ? htmlspecialchars($velocidade) : 'N/A'; ?></p>
                 <p><strong>Timer:</strong> <?php echo isset($timer) ? ($timer ? 'Ativado' : 'Desativado') : 'N/A'; ?></p>
                 <p><strong>Status de Energia:</strong> <?php echo isset($status) ? ($status ? 'Ligado' : 'Desligado') : 'N/A'; ?></p>
             </div>
