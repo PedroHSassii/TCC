@@ -23,28 +23,79 @@ if (isset($data['acao']) && isset($data['sala_id'])) {
     $stmt->fetch();
     $stmt->close();
 
+    $stmt = $conn->prepare("SELECT velocidade FROM ambientes WHERE id = ?");
+    $stmt->bind_param("i", $sala_id);
+    $stmt->execute();
+    $stmt->bind_result($velocidade);
+    $stmt->fetch();
+    $stmt->close();
+
+    $stmt = $conn->prepare("SELECT temperatura FROM ambientes WHERE id = ?");
+    $stmt->bind_param("i", $sala_id);
+    $stmt->execute();
+    $stmt->bind_result($temperatura);
+    $stmt->fetch();
+    $stmt->close();
+
+    $stmt = $conn->prepare("SELECT modo FROM ambientes WHERE id = ?");
+    $stmt->bind_param("i", $sala_id);
+    $stmt->execute();
+    $stmt->bind_result($modo);
+    $stmt->fetch();
+    $stmt->close();
+
     // Atualiza o status baseado na ação
     switch ($acao) {
         case 'Power':
             // Alterna o status entre 1 (ligado) e 2 (desligado)
             $new_status = ($status === 1) ? 2 : 1;
+            // Atualizar o status no banco de dados
+            $stmt = $conn->prepare("UPDATE ambientes SET status = ? WHERE id = ?");
+            $stmt->bind_param("ii", $new_status, $sala_id);
+            $stmt->execute();
+            $stmt->close(); // Fechar a declaração após a execução
             break;
         case 'Fan Speed':
-            // Aqui você pode implementar a lógica para alterar a velocidade do ventilador
-            $new_status = $status; // Exemplo: manter o status atual
+            // Alterna entre 1 (Automática), 2 (Baixa), 3 (Média), 4 (Alta)
+            $new_velocidade = ($velocidade % 4) + 1; // Isso alterna entre 1 e 4
+            // Atualizar a velocidade no banco de dados
+            $stmt = $conn->prepare("UPDATE ambientes SET velocidade = ? WHERE id = ?");
+            $stmt->bind_param("ii", $new_velocidade, $sala_id);
+            $stmt->execute();
+            $stmt->close(); // Fechar a declaração após a execução
             break;
         case 'Temp+':
-            // Aqui você pode implementar a lógica para aumentar a temperatura
-            $new_status = $status; // Exemplo: manter o status atual
+            if ($temperatura < 32) {
+            $new_temperatura = $temperatura + 1; // Aumenta a temperatura em 1
+        } else {
+            $new_temperatura = 32; // Mantém a temperatura em 30 se já estiver nesse valor
+        }
+            $stmt = $conn->prepare("UPDATE ambientes SET temperatura = ? WHERE id = ?");
+            $stmt->bind_param("ii", $new_temperatura, $sala_id);
+            $stmt->execute();
+            $stmt->close(); // Fechar a declaração após a execução
             break;
         case 'Temp−':
-            // Aqui você pode implementar a lógica para diminuir a temperatura
-            $new_status = $status; // Exemplo: manter o status atual
+            if ($temperatura > 16) {
+            $new_temperatura = $temperatura - 1; // Diminui a temperatura em 1
+        } else {
+            $new_temperatura = 16; // Mantém a temperatura em 16 se já estiver nesse valor
+        }
+            $stmt = $conn->prepare("UPDATE ambientes SET temperatura = ? WHERE id = ?");
+            $stmt->bind_param("ii", $new_temperatura, $sala_id);
+            $stmt->execute();
+            $stmt->close(); // Fechar a declaração após a execução
             break;
         case 'Modo':
-            // Aqui você pode implementar a lógica para mudar o modo
-            $new_status = $status; // Exemplo: manter o status atual
+            // Alterna entre 1 e 5
+            $new_modo = ($modo % 5) + 1; // Isso alterna entre 1 e 5
+            // Atualizar o modo no banco de dados
+            $stmt = $conn->prepare("UPDATE ambientes SET modo = ? WHERE id = ?");
+            $stmt->bind_param("ii", $new_modo, $sala_id);
+            $stmt->execute();
+            $stmt->close(); // Fechar a declaração após a execução
             break;
+
         case 'Swing':
             // Aqui você pode implementar a lógica para ativar/desativar o swing
             $new_status = $status; // Exemplo: manter o status atual
@@ -54,9 +105,6 @@ if (isset($data['acao']) && isset($data['sala_id'])) {
             exit();
     }
 
-    // Atualiza o status no banco de dados
-    $stmt = $conn->prepare("UPDATE ambientes SET status = ? WHERE id = ?");
-    $stmt->bind_param("ii", $new_status, $sala_id);
     
     if ($stmt->execute()) {
         

@@ -98,7 +98,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['sala_id'])) {
         <?php else: ?>
             <div class="monitor">
                 <h4>Monitor de Controle</h4>
-                <p><strong>Modo de Operação:</strong> <?php echo isset($modo) ? htmlspecialchars($modo) : 'N/A'; ?></p>
+                <p><strong>Modo de Operação:</strong></p>
+                    <select name="modo" id="modo">
+                        <option value="1" <?php echo (isset($modo) && $modo == 1) ? 'selected' : ''; ?>>Frio</option>
+                        <option value="2" <?php echo (isset($modo) && $modo == 2) ? 'selected' : ''; ?>>Quente</option>
+                        <option value="3" <?php echo (isset($modo) && $modo == 3) ? 'selected' : ''; ?>>Automático</option>
+                        <option value="4" <?php echo (isset($modo) && $modo == 4) ? 'selected' : ''; ?>>Ventilação</option>
+                        <option value="5" <?php echo (isset($modo) && $modo == 5) ? 'selected' : ''; ?>>Desumidificação</option>
+                    </select>
                 <p><strong>Temperatura:</strong> <?php echo isset($temperatura) ? htmlspecialchars($temperatura) . ' °C' : 'N/A'; ?></p>
                 <p><strong>Velocidade do Ventilador:</strong> <?php echo isset($velocidade) ? htmlspecialchars($velocidade) : 'N/A'; ?></p>
                 <p><strong>Timer:</strong> <?php echo isset($timer) ? ($timer ? 'Ativado' : 'Desativado') : 'N/A'; ?></p>
@@ -107,18 +114,18 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['sala_id'])) {
 
             <div class="icon-container">
                 <div class="column">
-                    <button class="btn btn-primary btn-icon" onclick="executarAcao('Power')">Power</button>
-                    <button class="btn btn-primary btn-icon" onclick="executarAcao('Fan Speed')">Fan Speed</button>
+                    <button class="btn btn-primary btn-icon" onclick="executarAcao('Power',  <?php echo $sala_selecionada;?>)">Power</button>
+                    <button class="btn btn-primary btn-icon" onclick="executarAcao('Fan Speed',  <?php echo $sala_selecionada;?>)">Fan Speed</button>
                 </div>
 
                 <div class="column">
-                    <button class="btn btn-primary btn-icon" onclick="executarAcao('Temp+')">Temp+</button>
-                    <button class="btn btn-primary btn-icon" onclick="executarAcao('Temp−')">Temp−</button>
+                    <button class="btn btn-primary btn-icon" onclick="executarAcao('Temp+',  <?php echo $sala_selecionada;?>)">Temp+</button>
+                    <button class="btn btn-primary btn-icon" onclick="executarAcao('Temp−',  <?php echo $sala_selecionada;?>)">Temp−</button>
                 </div>
 
                 <div class="column">
-                    <button class="btn btn-primary btn-icon" onclick="executarAcao('Modo')">Modo</button>
-                    <button class="btn btn-primary btn-icon" onclick="executarAcao('Swing')">Swing</button>
+                    <button class="btn btn-primary btn-icon" onclick="executarAcao('Modo',  <?php echo $sala_selecionada;?>)">Modo</button>
+                    <button class="btn btn-primary btn-icon" onclick="executarAcao('Swing',  <?php echo $sala_selecionada;?>)">Swing</button>
                 </div>           
              </div>
         <?php endif; ?>
@@ -129,7 +136,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['sala_id'])) {
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <script>
         function executarAcao(acao, salaId) {
-            console.log(salaId)
             fetch('acao.php', {
                 method: 'POST',
                 headers: {

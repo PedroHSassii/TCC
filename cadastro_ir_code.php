@@ -112,11 +112,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <div class="form-group">
                 <label for="modo">Modo de Operação</label>
                 <select class="form-control" id="modo" name="modo" required>
-                    <option value="frio">Frio</option>
-                    <option value="quente">Quente</option>
-                    <option value="automatico">Automático</option>
-                    <option value="ventilacao">Ventilação</option>
-                    <option value="desumidificacao">Desumidificação</option>
+                    <option value="1">Frio</option>
+                    <option value="2">Quente</option>
+                    <option value="3">Automático</option>
+                    <option value="4">Ventilação</option>
+                    <option value="5">Desumidificação</option>
                 </select>
             </div>
 
@@ -128,10 +128,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <div class="form-group">
                 <label for="velocidade">Velocidade do Ventilador</label>
                 <select class="form-control" id="velocidade" name="velocidade" required>
-                    <option value="automatica">Automática</option>
-                    <option value="baixa">Baixa</option>
-                    <option value="media">Média</option>
-                    <option value="alta">Alta</option>
+                    <option value="1">Automática</option>
+                    <option value="2">Baixa</option>
+                    <option value="3">Média</option>
+                    <option value="4">Alta</option>
                 </select>
             </div>
 
@@ -146,8 +146,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </div>
 
             <div class="form-group">
+                <form method="POST" action="seu_script.php">
                 <label for="status">Status de Energia</label>
-                <input type="checkbox" id="status" name="status" checked>
+                <input type="checkbox" id="status" name="status" value="1" checked>
             </div>
 
             <div class="text-center" style="margin-bottom: 15px;"> <!-- Centraliza os botões -->
