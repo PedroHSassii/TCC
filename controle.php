@@ -80,21 +80,21 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['sala_id'])) {
     <div class="container">
         
         <?php if (!$sala_selecionada): ?>
-            <form method="POST" class="mt-4">
+            <form method="POST" class="mb-4">
                 <div class="form-group">
                     <label for="sala_id">Selecione a Sala:</label>
-                    <select name="sala_id" id="sala_id" class="form-control" required>
+                    <select class="form-control" id="sala_id" name="sala_id" required>
                         <option value="">Selecione uma sala</option>
                         <?php foreach ($salas as $sala): ?>
-                            <option value="<?php echo $sala['ambiente_id']; ?>" <?php echo ($sala['ambiente_id'] == $sala_selecionada) ? 'selected' : ''; ?>>
+                            <option value="<?php echo $sala['ambiente_id']; ?>" <?php echo ($sala_selecionada == $sala['ambiente_id']) ? 'selected' : ''; ?>>
                                 <?php echo htmlspecialchars($sala['ambiente_nome']); ?>
                             </option>
                         <?php endforeach; ?>
                     </select>
                 </div>
-                <button type="submit" class="btn btn-primary btn-block">Carregar Funções</button>
+                <button type="submit" class="btn btn-primary">Selecionar</button>
             </form>
-
+   
         <?php else: ?>
             <div class="monitor">
                 <h4>Monitor de Controle</h4>
@@ -129,6 +129,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['sala_id'])) {
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <script>
         function executarAcao(acao, salaId) {
+            console.log(salaId)
             fetch('acao.php', {
                 method: 'POST',
                 headers: {
