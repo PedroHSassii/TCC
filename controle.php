@@ -22,14 +22,13 @@ while ($row = $result->fetch_assoc()) {
 
 // Inicializa a variável para a sala selecionada
 $sala_selecionada = null;
+$modo = $temperatura = $velocidade = $timer = $status = null; // Inicializa as variáveis
 
 // Verifica se o formulário foi enviado
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['sala_id'])) {
     $sala_selecionada = $_POST['sala_id']; // Armazena a sala selecionada
-}
 
-// Obter dados do ambiente selecionado
-if ($sala_selecionada) {
+    // Obter dados do ambiente selecionado
     $stmt = $conn->prepare("SELECT modo, temperatura, velocidade, timer, status FROM ambientes WHERE id = ?");
     $stmt->bind_param("i", $sala_selecionada);
     $stmt->execute();
@@ -58,7 +57,6 @@ if ($sala_selecionada) {
             padding: 15px;
             border-radius: 5px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            margin-bottom: 20px;
         }
         .btn-icon {
             width: 100px; /* Largura dos botões */
@@ -68,41 +66,19 @@ if ($sala_selecionada) {
         }
         .icon-container {
             display: flex;
-            justify-content: space-between; /* Espaça as colunas */
+            justify-content: space-around;
+            margin-top: 20px;
         }
-        .column {
+       .column {
             display: flex;
             flex-direction: column; /* Coloca os botões em coluna */
             align-items: center; /* Centraliza os botões */
         }
     </style>
-    <script>
-        function executarAcao(acao) {
-            const data = {
-                acao: acao,
-                sala_id: <?php echo json_encode($sala_selecionada); ?>
-            };
-
-            fetch('acao.php', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(data),
-            })
-            .then(response => response.text())
-            .then(data => {
-                console.log(data); // Para depuração
-                alert(data); // Exibe a resposta do servidor
-            })
-            .catch((error) => {
-                console.error('Error:', error);
-            });
-        }
-    </script>
 </head>
 <body>
     <div class="container">
+        
         <?php if (!$sala_selecionada): ?>
             <form method="POST" class="mt-4">
                 <div class="form-group">
@@ -118,6 +94,7 @@ if ($sala_selecionada) {
                 </div>
                 <button type="submit" class="btn btn-primary btn-block">Carregar Funções</button>
             </form>
+
         <?php else: ?>
             <div class="monitor">
                 <h4>Monitor de Controle</h4>
@@ -142,13 +119,30 @@ if ($sala_selecionada) {
                 <div class="column">
                     <button class="btn btn-primary btn-icon" onclick="executarAcao('Modo')">Modo</button>
                     <button class="btn btn-primary btn-icon" onclick="executarAcao('Swing')">Swing</button>
-                </div>
-            </div>
+                </div>           
+             </div>
         <?php endif; ?>
     </div>
 
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+        function executarAcao(acao, salaId) {
+            fetch('acao.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ acao: acao, sala_id: salaId })
+            })
+            .then(response => response.json())
+            .then(data => {
+                alert(data.message);
+                // Aqui você pode atualizar a interface ou fazer outras ações
+            })
+            .catch(error => console.error('Erro:', error));
+        }
+    </script>
 </body>
 </html>
