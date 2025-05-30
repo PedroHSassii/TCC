@@ -80,10 +80,6 @@ if ($sala_selecionada) {
         function executarAcao(acao) {
             const data = {
                 acao: acao,
-                modo: document.getElementById('modo').value,
-                temperatura: document.getElementById('temperatura').value,
-                velocidade: document.getElementById('velocidade').value,
-                swing: document.getElementById('swing').checked ? 1 : 0, // Adiciona o estado do swing
                 sala_id: <?php echo json_encode($sala_selecionada); ?>
             };
 
@@ -129,11 +125,10 @@ if ($sala_selecionada) {
                 <p><strong>Temperatura:</strong> <?php echo isset($temperatura) ? htmlspecialchars($temperatura) . ' °C' : 'N/A'; ?></p>
                 <p><strong>Velocidade do Ventilador:</strong> <?php echo isset($velocidade) ? htmlspecialchars($velocidade) : 'N/A'; ?></p>
                 <p><strong>Timer:</strong> <?php echo isset($timer) ? ($timer ? 'Ativado' : 'Desativado') : 'N/A'; ?></p>
-                <p><strong>Status de Energia:</strong> <?php echo isset($status) ? ($status ? 'Ligado' : 'Desligado') : 'N/A'; ?></p>
+                <p><strong>Status:</strong> <?php echo isset($status) ? ($status ? 'Ligado' : 'Desligado') : 'N/A'; ?></p>
             </div>
 
-            <h2 class="text-center mt-4"><?php echo htmlspecialchars($salas[array_search($sala_selecionada, array_column($salas, 'ambiente_id'))]['ambiente_nome']); ?></h2>
-            <div class="icon-container mt-4">
+            <div class="icon-container">
                 <div class="column">
                     <button class="btn btn-primary btn-icon" onclick="executarAcao('Power')">Power</button>
                     <button class="btn btn-primary btn-icon" onclick="executarAcao('Fan Speed')">Fan Speed</button>
@@ -151,5 +146,9 @@ if ($sala_selecionada) {
             </div>
         <?php endif; ?>
     </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>
