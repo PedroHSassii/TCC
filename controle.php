@@ -98,14 +98,33 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['sala_id'])) {
         <?php else: ?>
             <div class="monitor">
                 <h4>Monitor de Controle</h4>
-                <p><strong>Modo de Operação:</strong></p>
-                    <select name="modo" id="modo">
-                        <option value="1" <?php echo (isset($modo) && $modo == 1) ? 'selected' : ''; ?>>Frio</option>
-                        <option value="2" <?php echo (isset($modo) && $modo == 2) ? 'selected' : ''; ?>>Quente</option>
-                        <option value="3" <?php echo (isset($modo) && $modo == 3) ? 'selected' : ''; ?>>Automático</option>
-                        <option value="4" <?php echo (isset($modo) && $modo == 4) ? 'selected' : ''; ?>>Ventilação</option>
-                        <option value="5" <?php echo (isset($modo) && $modo == 5) ? 'selected' : ''; ?>>Desumidificação</option>
-                    </select>
+                <p><strong>Modo de Operação:</strong> 
+                    <?php 
+                    if (isset($modo)) {
+                        switch ($modo) {
+                            case 1:
+                                echo 'Frio';
+                                break;
+                            case 2:
+                                echo 'Quente';
+                                break;
+                            case 3:
+                                echo 'Automático';
+                                break;
+                            case 4:
+                                echo 'Ventilação';
+                                break;
+                            case 5:
+                                echo 'Desumidificação';
+                                break;
+                            default:
+                                echo 'N/A';
+                                break;
+                        }
+                    } else {
+                        echo 'N/A';
+                    }
+                    ?>
                 <p><strong>Temperatura:</strong> <?php echo isset($temperatura) ? htmlspecialchars($temperatura) . ' °C' : 'N/A'; ?></p>
                 <p><strong>Velocidade do Ventilador:</strong> <?php echo isset($velocidade) ? htmlspecialchars($velocidade) : 'N/A'; ?></p>
                 <p><strong>Timer:</strong> <?php echo isset($timer) ? ($timer ? 'Ativado' : 'Desativado') : 'N/A'; ?></p>
