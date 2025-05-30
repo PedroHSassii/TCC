@@ -22,23 +22,14 @@ while ($row = $result->fetch_assoc()) {
 
 // Inicializa a variável para a sala selecionada
 $sala_selecionada = null;
-$funcoes_mapeadas = []; // Array para armazenar funções mapeadas
 
 // Verifica se o formulário foi enviado
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['sala_id'])) {
     $sala_selecionada = $_POST['sala_id']; // Armazena a sala selecionada
+}
 
-    // Verifica quais funções estão mapeadas para a sala selecionada
-    $stmt = $conn->prepare("SELECT cod_tipofunc FROM ir_codes WHERE cod_ambiente = ?");
-    $stmt->bind_param("i", $sala_selecionada);
-    $stmt->execute();
-    $result_funcoes = $stmt->get_result();
-
-    while ($row = $result_funcoes->fetch_assoc()) {
-        $funcoes_mapeadas[] = $row['cod_tipofunc']; // Armazena os códigos das funções mapeadas
-    }
-
-    // Obter dados do ambiente selecionado
+// Obter dados do ambiente selecionado
+if ($sala_selecionada) {
     $stmt = $conn->prepare("SELECT modo, temperatura, velocidade, timer, status FROM ambientes WHERE id = ?");
     $stmt->bind_param("i", $sala_selecionada);
     $stmt->execute();
@@ -85,6 +76,35 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['sala_id'])) {
             align-items: center; /* Centraliza os botões */
         }
     </style>
+    <script>
+        function executarAcao(acao) {
+            const data = {
+                acao: acao,
+                modo: document.getElementById('modo').value,
+                temperatura: document.getElementById('temperatura').value,
+                velocidade: document.getElementById('velocidade').value,
+                timer: document.getElementById('timer').checked ? 1 : 0,
+                status: document.getElementById('status').checked ? 1 : 0,
+                sala_id: <?php echo json_encode($sala_selecionada); ?>
+            };
+
+            fetch('acao.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data),
+            })
+            .then(response => response.text())
+            .then(data => {
+                console.log(data); // Para depuração
+                alert(data); // Exibe a resposta do servidor
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+            });
+        }
+    </script>
 </head>
 <body>
     <div class="container">
@@ -114,62 +134,27 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['sala_id'])) {
             </div>
 
             <h2 class="text-center mt-4"><?php echo htmlspecialchars($salas[array_search($sala_selecionada, array_column($salas, 'ambiente_id'))]['ambiente_nome']); ?></h2>
-            <div class="icon-container mt-4">
+ <div class="icon-container mt-4">
                 <div class="column">
                     <button class="btn btn-primary btn-icon" onclick="executarAcao('Power')" <?php echo in_array(1, $funcoes_mapeadas) ? '' : 'disabled'; ?>>Power</button>
                     <button class="btn btn-primary btn-icon" onclick="executarAcao('Fan Speed')" <?php echo in_array(2, $funcoes_mapeadas) ? '' : 'disabled'; ?>>Fan Speed</button>
-                    <button class="btn btn-primary btn-icon" onclick="executarAcao('Quiet')" <?php echo in_array(3, $funcoes_mapeadas) ? '' : 'style="display:none;"'; ?>>Quiet</button>
-                    <button class="btn btn-primary btn-icon" onclick="executarAcao('Clean')" <?php echo in_array(4, $funcoes_mapeadas) ? '' : 'style="display:none;"'; ?>>Clean</button>
-                    <button class="btn btn-primary btn-icon" onclick="executarAcao('Reset')" <?php echo in_array(5, $funcoes_mapeadas) ? '' : 'style="display:none;"'; ?>>Reset</button>
-                    <button class="btn btn-primary btn-icon" onclick="executarAcao('Timer On')" <?php echo in_array(6, $funcoes_mapeadas) ? '' : 'style="display:none;"'; ?>>Timer On</button>
                 </div>
 
                 <div class="column">
                     <button class="btn btn-primary btn-icon" onclick="executarAcao('Temp+')" <?php echo in_array(7, $funcoes_mapeadas) ? '' : 'disabled'; ?>>Temp+</button>
                     <button class="btn btn-primary btn-icon" onclick="executarAcao('Temp−')" <?php echo in_array(8, $funcoes_mapeadas) ? '' : 'disabled'; ?>>Temp−</button>
-                    <button class="btn btn-primary btn-icon" onclick="executarAcao('Sleep')" <?php echo in_array(9, $funcoes_mapeadas) ? '' : 'style="display:none;"'; ?>>Sleep</button>
-                    <button class="btn btn-primary btn-icon" onclick="executarAcao('Eco')" <?php echo in_array(10, $funcoes_mapeadas) ? '' : 'style="display:none;"'; ?>>Eco</button>
-                    <button class="btn btn-primary btn-icon" onclick="executarAcao('LED')" <?php echo in_array(11, $funcoes_mapeadas) ? '' : 'style="display:none;"'; ?>>LED</button>
                 </div>
 
                 <div class="column">
                     <button class="btn btn-primary btn-icon" onclick="executarAcao('Mode')" <?php echo in_array(12, $funcoes_mapeadas) ? '' : 'disabled'; ?>>Mode</button>
                     <button class="btn btn-primary btn-icon" onclick="executarAcao('Swing')" <?php echo in_array(13, $funcoes_mapeadas) ? '' : 'disabled'; ?>>Swing</button>
                     <button class="btn btn-primary btn-icon" onclick="executarAcao('Turbo')" <?php echo in_array(14, $funcoes_mapeadas) ? '' : 'style="display:none;"'; ?>>Turbo</button>
-                    <button class="btn btn-primary btn-icon" onclick="executarAcao('Anti-Fungus')" <?php echo in_array(15, $funcoes_mapeadas) ? '' : 'style="display:none;"'; ?>>Anti-Fungus</button>
-                    <button class="btn btn-primary btn-icon" onclick="executarAcao('Clock')" <?php echo in_array(16, $funcoes_mapeadas) ? '' : 'style="display:none;"'; ?>>Clock</button>
-                    <button class="btn btn-primary btn-icon" onclick="executarAcao('Timer Off')" <?php echo in_array(17, $funcoes_mapeadas) ? '' : 'style="display:none;"'; ?>>Timer Off</button>
                 </div>
-            </div>
         <?php endif; ?>
-
-        <div class="text-center mt-4">
-            <a href="logout.php" class="btn btn-warning">Logoff</a>
-            <a href="menu.php" class="btn btn-secondary">Voltar</a>
-        </div>
     </div>
 
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-    <script>
-        function executarAcao(acao) {
-            // Envia a ação para o servidor via AJAX
-            $.ajax({
-                url: 'acao.php',
-                type: 'POST',
-                data: {
-                    acao: acao,
-                    sala_id: <?php echo json_encode($sala_selecionada); ?> // Passa o ID da sala selecionada
-                },
-                success: function(response) {
-                    alert("Ação executada: " + acao + "\n" + response);
-                },
-                error: function(xhr, status, error) {
-                    alert("Erro ao executar a ação: " + error);
-                }
-            });
-        }
-    </script>
 </body>
 </html>
