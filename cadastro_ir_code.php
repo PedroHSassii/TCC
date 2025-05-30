@@ -105,16 +105,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </div>
 
             <div class="form-group">
-                <label for="funcao">Função</label>
-                <select class="form-control" id="funcao" name="funcao" required>
-                    <option value="">Selecione uma função</option>
-                    <?php foreach ($funcoes as $funcao): ?>
-                        <option value="<?php echo $funcao['cod_tipofunc']; ?>"><?php echo $funcao['funcao']; ?></option>
-                    <?php endforeach; ?>
-                </select>
-            </div>
-
-            <div class="form-group">
                 <label for="codigo_ir">Código IR</label>
                 <input type="text" class="form-control" id="codigo_ir" name="codigo_ir" value="<?php echo htmlspecialchars($codigo_ir); ?>" readonly>
             </div>

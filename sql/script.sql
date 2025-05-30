@@ -54,3 +54,32 @@ CREATE TABLE predios (
 ALTER TABLE usuarios 
 ADD COLUMN nome VARCHAR(255) NOT NULL;
 
+--Tabela de ircodes
+CREATE TABLE `ir_codes` (
+  `id` int(11) NOT NULL,
+  `cod_ambiente` int(11) NOT NULL,
+  `codigo_ir` varchar(50) NOT NULL,
+  `modo` varchar(20) DEFAULT NULL,
+  `temperatura` int(11) DEFAULT NULL,
+  `velocidade` varchar(20) DEFAULT NULL,
+  `swing` tinyint(1) DEFAULT NULL,
+  `timer` tinyint(1) DEFAULT NULL,
+  `status` tinyint(1) DEFAULT NULL,
+  `checksum` varchar(10) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+ALTER TABLE `ir_codes`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `cod_ambiente` (`cod_ambiente`);
+ALTER TABLE `ir_codes`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+
+-- Adiciona status a ambiente 
+ALTER TABLE ambientes
+ADD COLUMN modo VARCHAR(50) DEFAULT 'frio', -- Modo de operação
+ADD COLUMN temperatura INT DEFAULT 16, -- Temperatura em °C
+ADD COLUMN velocidade VARCHAR(20) DEFAULT 'automatica', -- Velocidade do ventilador
+ADD COLUMN swing TINYINT DEFAULT 0, -- 1 para true, 0 para false
+ADD COLUMN timer TINYINT DEFAULT 0, -- 1 para true, 0 para false
+ADD COLUMN status TINYINT DEFAULT 0, -- 1 para ligado, 0 para desligado
+ADD COLUMN checksum VARCHAR(10); -- Para verificação de integridade
