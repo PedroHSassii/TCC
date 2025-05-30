@@ -83,8 +83,7 @@ if ($sala_selecionada) {
                 modo: document.getElementById('modo').value,
                 temperatura: document.getElementById('temperatura').value,
                 velocidade: document.getElementById('velocidade').value,
-                timer: document.getElementById('timer').checked ? 1 : 0,
-                status: document.getElementById('status').checked ? 1 : 0,
+                swing: document.getElementById('swing').checked ? 1 : 0, // Adiciona o estado do swing
                 sala_id: <?php echo json_encode($sala_selecionada); ?>
             };
 
@@ -134,27 +133,23 @@ if ($sala_selecionada) {
             </div>
 
             <h2 class="text-center mt-4"><?php echo htmlspecialchars($salas[array_search($sala_selecionada, array_column($salas, 'ambiente_id'))]['ambiente_nome']); ?></h2>
- <div class="icon-container mt-4">
+            <div class="icon-container mt-4">
                 <div class="column">
-                    <button class="btn btn-primary btn-icon" onclick="executarAcao('Power')" <?php echo in_array(1, $funcoes_mapeadas) ? '' : 'disabled'; ?>>Power</button>
-                    <button class="btn btn-primary btn-icon" onclick="executarAcao('Fan Speed')" <?php echo in_array(2, $funcoes_mapeadas) ? '' : 'disabled'; ?>>Fan Speed</button>
+                    <button class="btn btn-primary btn-icon" onclick="executarAcao('Power')">Power</button>
+                    <button class="btn btn-primary btn-icon" onclick="executarAcao('Fan Speed')">Fan Speed</button>
                 </div>
 
                 <div class="column">
-                    <button class="btn btn-primary btn-icon" onclick="executarAcao('Temp+')" <?php echo in_array(7, $funcoes_mapeadas) ? '' : 'disabled'; ?>>Temp+</button>
-                    <button class="btn btn-primary btn-icon" onclick="executarAcao('Temp−')" <?php echo in_array(8, $funcoes_mapeadas) ? '' : 'disabled'; ?>>Temp−</button>
+                    <button class="btn btn-primary btn-icon" onclick="executarAcao('Temp+')">Temp+</button>
+                    <button class="btn btn-primary btn-icon" onclick="executarAcao('Temp−')">Temp−</button>
                 </div>
 
                 <div class="column">
-                    <button class="btn btn-primary btn-icon" onclick="executarAcao('Mode')" <?php echo in_array(12, $funcoes_mapeadas) ? '' : 'disabled'; ?>>Mode</button>
-                    <button class="btn btn-primary btn-icon" onclick="executarAcao('Swing')" <?php echo in_array(13, $funcoes_mapeadas) ? '' : 'disabled'; ?>>Swing</button>
-                    <button class="btn btn-primary btn-icon" onclick="executarAcao('Turbo')" <?php echo in_array(14, $funcoes_mapeadas) ? '' : 'style="display:none;"'; ?>>Turbo</button>
+                    <button class="btn btn-primary btn-icon" onclick="executarAcao('Modo')">Modo</button>
+                    <button class="btn btn-primary btn-icon" onclick="executarAcao('Swing')">Swing</button>
                 </div>
+            </div>
         <?php endif; ?>
     </div>
-
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>
