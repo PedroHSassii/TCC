@@ -37,15 +37,51 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $stmt->close();
     }
 
-    // Executa a ação de controle do ar-condicionado
-    if ($acao == 'ligar') {
-        // Enviar sinal IR para ligar o ar-condicionado
-        // Exemplo: irsend.sendNEC(0x20DF10EF, 32); // Código do controle remoto
-        echo "Ar-condicionado ligado.";
-    } elseif ($acao == 'desligar') {
-        // Enviar sinal IR para desligar o ar-condicionado
-        // Exemplo: irsend.sendNEC(0x20DF10EF, 32); // Código do controle remoto
-        echo "Ar-condicionado desligado.";
+    // Atualiza a velocidade do ventilador
+    if ($acao === 'Fan Speed') {
+        $nova_velocidade = $data['velocidade']; // Recebe a nova velocidade
+        $stmt = $conn->prepare("UPDATE ambientes SET velocidade = ? WHERE id = ?");
+        $stmt->bind_param("ii", $nova_velocidade, $sala_id);
+        if ($stmt->execute()) {
+            echo "Velocidade do ventilador atualizada para " . $nova_velocidade;
+        } else {
+            echo "Erro ao atualizar a velocidade do ventilador.";
+        }
+        $stmt->close();
+    }
+
+    // Atualiza a temperatura
+    if ($acao === 'Temp+') {
+        $stmt = $conn->prepare("UPDATE ambientes SET temperatura = temperatura + 1 WHERE id = ?");
+        $stmt->bind_param("i", $sala_id);
+        if ($stmt->execute()) {
+            echo "Temperatura aumentada em 1 grau.";
+        } else {
+            echo "Erro ao aumentar a temperatura.";
+        }
+        $stmt->close();
+    } elseif ($acao === 'Temp−') {
+        $stmt = $conn->prepare("UPDATE ambientes SET temperatura = temperatura - 1 WHERE id = ?");
+        $stmt->bind_param("i", $sala_id);
+        if ($stmt->execute()) {
+            echo "Temperatura diminuída em 1 grau.";
+        } else {
+            echo "Erro ao diminuir a temperatura.";
+        }
+        $stmt->close();
+    }
+
+    // Atualiza o modo
+    if ($acao === 'Modo') {
+        $novo_modo = $data['modo']; // Recebe o novo modo
+        $stmt = $conn->prepare("UPDATE ambientes SET modo = ? WHERE id = ?");
+        $stmt->bind_param("si", $novo_modo, $sala_id);
+        if ($stmt->execute()) {
+            echo "Modo atualizado para " . htmlspecialchars($novo_modo);
+        } else {
+            echo "Erro ao atualizar o modo.";
+        }
+        $stmt->close();
     }
 
     // Registrar a ação no banco de dados
