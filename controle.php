@@ -37,6 +37,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['sala_id'])) {
     while ($row = $result_funcoes->fetch_assoc()) {
         $funcoes_mapeadas[] = $row['cod_tipofunc']; // Armazena os códigos das funções mapeadas
     }
+
+    // Obter dados do ambiente selecionado
+    $stmt = $conn->prepare("SELECT modo_operacao, temperatura, velocidade_ventilador, timer, status FROM ambientes WHERE id = ?");
+    $stmt->bind_param("i", $sala_selecionada);
+    $stmt->execute();
+    $stmt->bind_result($modo_operacao, $temperatura, $velocidade_ventilador, $timer, $status);
+    $stmt->fetch();
+    $stmt->close();
 }
 ?>
 
@@ -53,6 +61,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['sala_id'])) {
         }
         .container {
             margin-top: 50px;
+        }
+        .monitor {
+            background-color: #fff;
+            padding: 15px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
         }
         .btn-icon {
             width: 100px; /* Largura dos botões */
@@ -89,6 +104,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['sala_id'])) {
                 <button type="submit" class="btn btn-primary btn-block">Carregar Funções</button>
             </form>
         <?php else: ?>
+            <div class="monitor">
+                <h4>Monitor de Controle</h4>
+                <p><strong>Modo de Operação:</strong> <?php echo isset($modo_operacao) ? htmlspecialchars($modo_operacao) : 'N/A'; ?></p>
+                <p><strong>Temperatura:</strong> <?php echo isset($temperatura) ? htmlspecialchars($temperatura) . ' °C' : 'N/A'; ?></p>
+                <p><strong>Velocidade do Ventilador:</strong> <?php echo isset($velocidade_ventilador) ? htmlspecialchars($velocidade_ventilador) : 'N/A'; ?></p>
+                <p><strong>Timer:</strong> <?php echo isset($timer) ? ($timer ? 'Ativado' : 'Desativado') : 'N/A'; ?></p>
+                <p><strong>Status de Energia:</strong> <?php echo isset($status) ? ($status ? 'Ligado' : 'Desligado') : 'N/A'; ?></p>
+            </div>
+
             <h2 class="text-center mt-4"><?php echo htmlspecialchars($salas[array_search($sala_selecionada, array_column($salas, 'ambiente_id'))]['ambiente_nome']); ?></h2>
             <div class="icon-container mt-4">
                 <div class="column">
