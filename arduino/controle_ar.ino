@@ -1,10 +1,12 @@
 #include <DHT.h>
+#include <IRremote.h>
 #include <WiFi.h>
 #include <MySQL_Connection.h>
 #include <MySQL_Cursor.h>
 
 // Definições de constantes
 const int DHTPIN = 2; // Pino onde o DHT11 está conectado
+const int RECV_PIN = 3; // Pino onde o TSOP4838 está conectado
 const int DHTTYPE = DHT11; // Tipo do sensor DHT
 const int predio_id = 1; // ID do prédio (fixo)
 const int numero_sala = 101; // Número da sala (fixo)
@@ -19,12 +21,15 @@ char user[] = "usuario"; // Usuário do MySQL
 char password[] = "senha"; // Senha do MySQL
 
 DHT dht(DHTPIN, DHTTYPE);
+IRrecv irrecv(RECV_PIN);
+decode_results results;
 WiFiClient client;
 MySQL_Connection conn((Client *)&client);
 
 void setup() {
   Serial.begin(115200);
   dht.begin();
+  irrecv.enableIRIn(); // Inicia o receptor IR
   
   // Conexão com WiFi
   WiFi.begin(ssid, password);
@@ -58,6 +63,17 @@ void loop() {
 
   // Aguarda 30 segundos antes da próxima leitura
   delay(30000);
+
+  // Leitura do código IR
+  if (irrecv.decode(&results)) {
+    Serial.print("Código IR: ");
+    Serial.println(results.value, HEX); // Exibe o código em hexadecimal
+
+    // Armazena o código na tabela temporária
+    storeIRCode(results.value);
+
+    irrecv.resume(); // Recebe o próximo código
+  }
 }
 
 void updateDatabase(float temperature, float humidity) {
@@ -67,4 +83,13 @@ void updateDatabase(float temperature, float humidity) {
   MySQL_Cursor cur = MySQL_Cursor(&conn);
   cur.execute(query);
   Serial.println("Dados atualizados no banco de dados.");
+}
+
+void storeIRCode(unsigned long code) {
+  char query[128];
+  sprintf(query, "INSERT INTO tabela_temporaria (codigo_ir, predio_id, numero_sala) VALUES (0x%X, %d, %d)", code, predio_id, numero_sala);
+  
+  MySQL_Cursor cur = MySQL_Cursor(&conn);
+  cur.execute(query);
+  Serial.println("Código IR armazenado na tabela temporária.");
 }
